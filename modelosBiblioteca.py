@@ -4,39 +4,9 @@ import os
 from dotenv import load_dotenv
 import environ
 from creartablas import UsuarioDB, MaterialDB, PrestamoDB
-from pydantic import BaseModel
 
-# Modelos Pydantic para FastAPI
-class UsuarioSchema(BaseModel):
-    id_usuario: str | None = None
-    nombre: str
-    apellido: str
-    class Config:
-        orm_mode = True
 
-class MaterialSchema(BaseModel):
-    codigo_inventario: str | None = None
-    titulo: str
-    tipo: str
-    autor: str | None = None
-    isbn: str | None = None
-    numero_paginas: int | None = None
-    fecha_publicacion: str | None = None
-    numero_edicion: str | None = None
-    duracion: int | None = None
-    director: str | None = None
-    disponible: bool | None = None
-    class Config:
-        orm_mode = True
 
-class PrestamoSchema(BaseModel):
-    id: int | None = None
-    id_usuario: str
-    id_material: str
-    fecha_prestamo: str | None = None
-    fecha_devolucion: str | None = None
-    class Config:
-        orm_mode = True
 
 # Cargar variables de entorno
 load_dotenv()
