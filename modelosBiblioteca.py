@@ -3,7 +3,6 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 import environ
-from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 
 
 
