@@ -2,14 +2,50 @@ from sqlalchemy import create_engine
 import psycopg2
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
-
-# URL de conexión a la base de datos PostgreSQL en el archivo .env
 import environ
+from creartablas import UsuarioDB, MaterialDB, PrestamoDB
+from pydantic import BaseModel
+
+# Modelos Pydantic para FastAPI
+class UsuarioSchema(BaseModel):
+    id_usuario: str | None = None
+    nombre: str
+    apellido: str
+    class Config:
+        orm_mode = True
+
+class MaterialSchema(BaseModel):
+    codigo_inventario: str | None = None
+    titulo: str
+    tipo: str
+    autor: str | None = None
+    isbn: str | None = None
+    numero_paginas: int | None = None
+    fecha_publicacion: str | None = None
+    numero_edicion: str | None = None
+    duracion: int | None = None
+    director: str | None = None
+    disponible: bool | None = None
+    class Config:
+        orm_mode = True
+
+class PrestamoSchema(BaseModel):
+    id: int | None = None
+    id_usuario: str
+    id_material: str
+    fecha_prestamo: str | None = None
+    fecha_devolucion: str | None = None
+    class Config:
+        orm_mode = True
+
+# Cargar variables de entorno
+load_dotenv()
 env = environ.Env()
-env.read_env(".env")
-db_url = env("db_url")
+env.read_env()
+
+db_url = os.getenv('db_url_neon') or env('db_url_neon', default=None)
+if not db_url:
+    raise Exception('No se encontró la variable de entorno db_url_neon. Verifica tu archivo .env')
 print("Comprobamos que ha tomado el valor de la variable de entorno:", db_url)
 
 # Si se quiere usar SQLite en lugar de la base remota:
