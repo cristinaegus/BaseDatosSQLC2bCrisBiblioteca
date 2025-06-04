@@ -1,12 +1,12 @@
 # GestorBiblioteca.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from modelosBiblioteca import UsuarioDB, MaterialDB, PrestamoDB
+from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from datetime import datetime, timedelta
 import uuid
 
-db_url = "sqlite:///biblioteca/biblioteca.db"  # Cambia esto si usas otra base de datos 
-#db_url = "postgresql://newlibrary_owner:npg_KrPkYAv7ShR8@ep-empty-lab-a9qveeyx-pooler.gwc.azure.neon.tech/newlibrary?sslmode=require"
+#db_url = "sqlite:///biblioteca/biblioteca.db"  # Cambia esto si usas otra base de datos 
+db_url = "postgresql://newlibrary_owner:npg_KrPkYAv7ShR8@ep-empty-lab-a9qveeyx-pooler.gwc.azure.neon.tech/newlibrary?sslmode=require"
 class GestorBiblioteca:
     def __init__(self, db_url=db_url):
         engine = create_engine(db_url)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, Form, Query
 from biblioteca.gestorbiblioteca import GestorBiblioteca
-from modelosBiblioteca import UsuarioDB, MaterialDB, PrestamoDB
+from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -58,6 +58,25 @@ def post_material(
         "duracion": duracion,
         "director": director
     }
+@app.get("/materiales/")
+def get_materials():
+    gestor = GestorBiblioteca()
+    materiales = gestor.listar_materiales()
+    return [
+        {
+            "codigo_inventario": m.codigo_inventario,
+            "tipo": m.tipo,
+            "titulo": m.titulo,
+            "autor": m.autor,
+            "isbn": m.isbn,
+            "numero_paginas": m.numero_paginas,
+            "fecha_publicacion": m.fecha_publicacion,
+            "numero_edicion": m.numero_edicion,
+            "duracion": m.duracion,
+            "director": m.director
+        }
+        for m in materiales
+    ]   
 
 @app.post("/prestamos/")
 def post_prestamo(
@@ -70,5 +89,19 @@ def post_prestamo(
         return {"id_usuario": id_usuario, "id_material": id_material}
     else:
         return {"error": "No se pudo registrar el préstamo"}
+@app.get("/prestamos/")
+def get_prestamos():
+    gestor = GestorBiblioteca()
+    prestamos = gestor.listar_prestamos()
+    return [
+        {
+            "id_usuario": p.id_usuario,
+            "id_material": p.id_material,
+            "fecha_prestamo": p.fecha_prestamo.isoformat(),
+            "fecha_devolucion": p.fecha_devolucion.isoformat()
+        }
+        for p in prestamos
+    ]
+
 
 
