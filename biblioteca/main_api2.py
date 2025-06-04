@@ -1,13 +1,27 @@
-from fastapi import FastAPI, APIRouter, Form, Query
+from fastapi import FastAPI, APIRouter, Form, Query, HTTPException
 from pydantic import BaseModel
 from biblioteca.gestorbiblioteca import GestorBiblioteca
 from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 Base = declarative_base()
 app = FastAPI() 
 router = APIRouter()
+
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], allow_credentials=True,
+    allow_methods=["*"], allow_headers=["*"],
+)
+
+biblioteca = GestorBiblioteca()
+
 
 # Modelos Pydantic
 class UsuarioIn(BaseModel):
@@ -138,6 +152,24 @@ def get_prestamos():
         }
         for p in prestamos
     ]
+
+@app.delete("/usuarios/{id_usuario}")
+def delete_usuario(id_usuario: str):
+    gestor = GestorBiblioteca()
+    exito = gestor.borrar_usuario(id_usuario)
+    if exito:
+        return {"mensaje": f"Usuario {id_usuario} eliminado correctamente"}
+    else:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+@app.delete("/materiales/{codigo_inventario}")
+def delete_material(codigo_inventario: str):
+    gestor = GestorBiblioteca()
+    exito = gestor.borrar_material(codigo_inventario)
+    if exito:
+        return {"mensaje": f"Material {codigo_inventario} eliminado correctamente"}
+    else:
+        raise HTTPException(status_code=404, detail="Material no encontrado")
 
 
 

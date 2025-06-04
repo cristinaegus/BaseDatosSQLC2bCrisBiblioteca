@@ -92,3 +92,11 @@ class GestorBiblioteca:
             "apellido": usuario.apellido,
             "prestamos": prestamos
         }
+
+    def borrar_usuario(self, id_usuario):
+        usuario = self.session.query(UsuarioDB).filter_by(id_usuario=id_usuario).first()
+        if usuario:
+            self.session.delete(usuario)
+            self.session.commit()
+            return True
+        return False

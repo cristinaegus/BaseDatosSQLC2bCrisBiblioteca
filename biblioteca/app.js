@@ -1,16 +1,16 @@
-import "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css";
-import "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js";
-
-const API = "http://127.0.0.1:8002";
+const API = "http://127.0.0.1:8010";
 
 function mostrarUsuarios() {
   fetch(`${API}/usuarios/`)
     .then((r) => r.json())
     .then((data) => {
       let html = data
-        .map((u) => `${u.id_usuario}: ${u.nombre} ${u.apellido}`)
+        .map(
+          (u) =>
+            `${u.id_usuario}: ${u.nombre} ${u.apellido} <button class='btn btn-danger btn-sm ms-2' onclick="borrarUsuario('${u.id_usuario}')">Borrar</button>`
+        )
         .join("\n");
-      document.getElementById("usuariosList").textContent = html;
+      document.getElementById("usuariosList").innerHTML = html;
       // Para el select de préstamos
       let select = document.getElementById("usuarioPrestamo");
       select.innerHTML =
@@ -23,14 +23,34 @@ function mostrarUsuarios() {
           .join("");
     });
 }
+
+function borrarUsuario(id_usuario) {
+  if (!confirm("¿Seguro que quieres borrar este usuario?")) return;
+  fetch(`${API}/usuarios/${id_usuario}`, {
+    method: "DELETE",
+  })
+    .then((r) => {
+      if (!r.ok)
+        return r.json().then((d) => {
+          throw d;
+        });
+      return r.json();
+    })
+    .then(() => mostrarUsuarios())
+    .catch((err) => alert(err.detail || "Error al borrar usuario"));
+}
+
 function mostrarMateriales() {
   fetch(`${API}/materiales/`)
     .then((r) => r.json())
     .then((data) => {
       let html = data
-        .map((m) => `${m.codigo_inventario}: ${m.titulo} (${m.tipo})`)
+        .map(
+          (m) =>
+            `${m.codigo_inventario}: ${m.titulo} (${m.tipo}) <button class='btn btn-danger btn-sm ms-2' onclick="borrarMaterial('${m.codigo_inventario}')">Borrar</button>`
+        )
         .join("\n");
-      document.getElementById("materialesList").textContent = html;
+      document.getElementById("materialesList").innerHTML = html;
       // Para el select de préstamos
       let select = document.getElementById("materialPrestamo");
       select.innerHTML =
@@ -42,6 +62,23 @@ function mostrarMateriales() {
           .join("");
     });
 }
+
+function borrarMaterial(codigo_inventario) {
+  if (!confirm("¿Seguro que quieres borrar este material?")) return;
+  fetch(`${API}/materiales/${codigo_inventario}`, {
+    method: "DELETE",
+  })
+    .then((r) => {
+      if (!r.ok)
+        return r.json().then((d) => {
+          throw d;
+        });
+      return r.json();
+    })
+    .then(() => mostrarMateriales())
+    .catch((err) => alert(err.detail || "Error al borrar material"));
+}
+
 function mostrarPrestamos() {
   fetch(`${API}/prestamos/`)
     .then((r) => r.json())

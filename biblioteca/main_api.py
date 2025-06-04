@@ -2,10 +2,20 @@ from fastapi import FastAPI, APIRouter, Form, Query
 from biblioteca.gestorbiblioteca import GestorBiblioteca
 from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
+from fastapi.middleware.cors import CORSMiddleware
 
 Base = declarative_base()
 app = FastAPI() 
 router = APIRouter()
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], allow_credentials=True,
+    allow_methods=["*"], allow_headers=["*"],
+)
+
+biblioteca = GestorBiblioteca()
 
 @app.post("/usuarios/")
 def post_user(nombre: str = Form(...), apellido: str = Form(...)):
