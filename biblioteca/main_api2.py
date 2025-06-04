@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, Form, Query, HTTPException, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from biblioteca.gestorbiblioteca import GestorBiblioteca
 from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
@@ -71,8 +71,8 @@ class MaterialIn(BaseModel):
 class PrestamoIn(BaseModel):
     id_usuario: str
     id_material: str
-    fecha_prestamo: str
-    fecha_devolucion: str
+    fecha_prestamo: str = Field(..., description="Formato: aaaa-mm-ddThh:mm:ss (ejemplo: 2025-06-04T10:00:00)")
+    fecha_devolucion: str = Field(..., description="Formato: aaaa-mm-ddThh:mm:ss (ejemplo: 2025-06-18T10:00:00)")
 
     @classmethod
     def as_form(
