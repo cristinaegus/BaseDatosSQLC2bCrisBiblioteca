@@ -1,13 +1,17 @@
-from fastapi import FastAPI, APIRouter, Form, Query
+from fastapi import FastAPI, APIRouter, Form, Query, Depends, HTTPException
 from biblioteca.gestorbiblioteca import GestorBiblioteca
 from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 Base = declarative_base()
 app = FastAPI() 
 router = APIRouter()
 
+app.get("/")
+def root():
+    return {"message": "API Biblioteca funcionando. Visita /docs para la documentación."}
 # CORS
 app.add_middleware(
     CORSMiddleware,
@@ -112,6 +116,8 @@ def get_prestamos():
         }
         for p in prestamos
     ]
+
+
 
 
 

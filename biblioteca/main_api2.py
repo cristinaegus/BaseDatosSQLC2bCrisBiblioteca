@@ -5,6 +5,31 @@ from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from biblioteca.resenias import ReseniaMaterial, insertar_resenia_material
+
+# Definición del modelo Pydantic para ReseniaMaterial
+
+class ReseniaMaterial(BaseModel):
+    id_material: str
+    id_usuario: str
+    texto: str
+    calificacion: int
+
+    @classmethod
+    def as_form(
+        cls,
+        id_material: str = Form(...),
+        id_usuario: str = Form(...),
+        texto: str = Form(...),
+        calificacion: int = Form(...),
+    ):
+        return cls(
+            id_material=id_material,
+            id_usuario=id_usuario,
+            texto=texto,
+            calificacion=calificacion,
+        )
+
 
 
 
@@ -225,4 +250,10 @@ def delete_material(codigo_inventario: str):
         raise HTTPException(status_code=404, detail="Material no encontrado")
 
 
-
+@app.post("/resenias/", status_code=201)
+def crear_resenia(resenia: ReseniaMaterial = Depends(ReseniaMaterial.as_form)):
+    try:
+        
+        return {"message": "Reseña insertada correctamente"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al insertar reseña: {str(e)}")
