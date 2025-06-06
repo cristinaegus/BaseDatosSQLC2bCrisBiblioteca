@@ -173,6 +173,52 @@
               </form>
             </div>
           </div>
+          <div class="card">
+            <div class="card-header">Agregar Reseña</div>
+            <div class="card-body">
+              <form id="formResenia">
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  id="idMaterialResenia"
+                  placeholder="ID Material"
+                  required
+                />
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  id="idUsuarioResenia"
+                  placeholder="ID Usuario"
+                  required
+                />
+                <textarea
+                  class="form-control mb-2"
+                  id="textoResenia"
+                  placeholder="Reseña"
+                  required
+                ></textarea>
+                <input
+                  type="number"
+                  class="form-control mb-2"
+                  id="puntuacionResenia"
+                  placeholder="Puntuación (1-5)"
+                  min="1"
+                  max="5"
+                  required
+                />
+                <input
+                  type="datetime-local"
+                  class="form-control mb-2"
+                  id="fechaResenia"
+                  placeholder="Fecha"
+                  required
+                />
+                <button type="submit" class="btn btn-success w-100">
+                  Agregar Reseña
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
         <div class="col-md-8">
           <div class="card">
@@ -187,9 +233,16 @@
             <div class="card-header">Préstamos</div>
             <div class="card-body result" id="prestamosList"></div>
           </div>
+          <div class="card">
+            <div class="card-header">Reseñas</div>
+            <div class="card-body result" id="reseniasList"></div>
+          </div>
         </div>
       </div>
     </div>
     <script src="app.js"></script>
+    <script>
+      document.getElementById("formResenia").onsubmit = crearResenia;
+    </script>
   </body>
 </html>

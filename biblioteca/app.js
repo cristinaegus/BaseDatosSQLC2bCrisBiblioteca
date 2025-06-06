@@ -154,7 +154,47 @@ document.getElementById("formPrestamo").onsubmit = function (e) {
     document.getElementById("formPrestamo").reset();
   });
 };
+// ========== RESEÑAS ========== //
+// Mostrar reseñas
+function mostrarResenias() {
+  fetch(`${API}/resenias/`)
+    .then((r) => r.json())
+    .then((data) => {
+      let html = data
+        .map(
+          (r) =>
+            `<b>Material:</b> ${r.id_material} <b>Usuario:</b> ${r.id_usuario}<br><b>Reseña:</b> ${r.resenia || r.texto}<br><b>Puntuación:</b> ${r.puntuacion || r.calificacion}<br><b>Fecha:</b> ${r.fecha || ''}<hr>`
+        )
+        .join("");
+      document.getElementById("reseniasList").innerHTML = html || "Sin reseñas";
+    });
+}
+// Crear reseña
+function crearResenia(e) {
+  e.preventDefault();
+  fetch(`${API}/resenias/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id_material: document.getElementById("idMaterialResenia").value,
+      id_usuario: document.getElementById("idUsuarioResenia").value,
+      resenia: document.getElementById("textoResenia").value,
+      puntuacion: parseInt(document.getElementById("puntuacionResenia").value),
+      fecha: document.getElementById("fechaResenia").value,
+    }),
+  })
+    .then((r) => {
+      if (!r.ok) return r.json().then((d) => { throw d; });
+      return r.json();
+    })
+    .then(() => {
+      mostrarResenias();
+      document.getElementById("formResenia").reset();
+    })
+    .catch((err) => alert(err.detail || "Error al crear reseña"));
+}
 // Inicializar
 mostrarUsuarios();
 mostrarMateriales();
 mostrarPrestamos();
+mostrarResenias();
