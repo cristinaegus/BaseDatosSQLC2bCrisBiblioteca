@@ -32,10 +32,10 @@ class ReseniaMaterial(BaseModel):
     id_usuario: str = Field(alias="id_usuario")
     resenia: str = Field(alias="resenia")
     puntuacion: int = Field(alias="puntuacion")
-    fecha: datetime = Field(alias="fecha")
+    fecha: str = Field(alias="fecha")  # Cambiado a str
 
     @classmethod
-    def as_form(cls, id_material: str = Form(...), id_usuario: str = Form(...), resenia: str = Form(...), puntuacion: int = Form(...), fecha: datetime = Form(...)):
+    def as_form(cls, id_material: str = Form(...), id_usuario: str = Form(...), resenia: str = Form(...), puntuacion: int = Form(...), fecha: str = Form(...)):
         return cls(
             id_material=id_material,
             id_usuario=id_usuario,
@@ -46,46 +46,8 @@ class ReseniaMaterial(BaseModel):
 
 def insertar_resenia_material(resenia_material: ReseniaMaterial):
     resenia_material_dict = resenia_material.dict(by_alias=True)
-    try:
-        resenia_material_dict['id_material'] = ObjectId(resenia_material_dict['id_material'])
-        resenia_material_dict['id_usuario'] = ObjectId(resenia_material_dict['id_usuario'])
-    except Exception as e:
-        raise ValueError("El id_material o id_usuario no tiene formato válido de ObjectId") from e
+    # Guardar los IDs como string, no como ObjectId
     collection.insert_one(resenia_material_dict)
 
-nueva_resenia = {
-    "autor": "55E58A",
-    "material": "ABC123",
-    "resenia": "Muy buen libro. Me ha gustado",
-    "mencionar_usuarios": ["B6EDE9"],
-    "calificacion": 5,
-    "fecha": ""
-}   
-
-nueva_resenia = {
-    "autor": "55E58A",
-    "material": "ABC123",
-    "resenia": "Muy buen libro. Me ha gustado",
-    "mencionar_usuarios": ["B6EDE9"],
-    "calificacion": 5,
-    "fecha": ""
-}   
-
-collection.insert_one(nueva_resenia)
-
 def listar_resenias():
-    return list(collection.find({"autor": "55E58A", "material": "ABC123"}))
-
-lista_resenias = listar_resenias()
-print(lista_resenias)
-
-# Todos los documentos
-for usuario in db.resenias.find():
-    print(usuario)
-
-
-def borrar_resenia(autor, material):
-    collection.delete_one({"autor": autor, "material": material})
-    return "Resenia borrada correctamente"
-borrar = borrar_resenia("55E58A", "ABC123")
-print(borrar)  # Debería imprimir "Resenia borrada correctamente" si se borró correctamente
+    return list(collection.find({}, {"_id": 0}))

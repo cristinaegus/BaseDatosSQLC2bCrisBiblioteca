@@ -10,11 +10,17 @@
     />
     <style>
       body {
-        background: #f8f9fa;
+        background: url("https://get.pxhere.com/photo/book-read-shelf-furniture-bookshelf-bookcase-literature-library-books-shelving-1256031.jpg")
+          no-repeat center center fixed;
+        background-size: cover;
       }
       .container {
         max-width: 900px;
         margin-top: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding-bottom: 20px;
       }
       .card {
         margin-bottom: 20px;
@@ -30,7 +36,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="card">
-            <div class="card-header">Agregar Usuario</div>
+            <div class="card-header"><b>Agregar Usuario</b></div>
             <div class="card-body">
               <form id="formUsuario">
                 <input
@@ -68,7 +74,7 @@
             </div>
           </div>
           <div class="card">
-            <div class="card-header">Agregar Material</div>
+            <div class="card-header"><b>Agregar Material</b></div>
             <div class="card-body">
               <form id="formMaterial">
                 <input
@@ -138,25 +144,25 @@
         </div>
         <div class="col-md-8">
           <div class="card">
-            <div class="card-header">Usuarios</div>
+            <div class="card-header"><b>Usuarios</b></div>
             <div class="card-body result" id="usuariosList"></div>
           </div>
           <div class="card">
-            <div class="card-header">Materiales</div>
+            <div class="card-header"><b>Materiales</b></div>
             <div class="card-body result" id="materialesList"></div>
           </div>
           <div class="card">
-            <div class="card-header">Préstamos</div>
+            <div class="card-header"><b>Préstamos</b></div>
             <div class="card-body result" id="prestamosList"></div>
           </div>
           <div class="card">
-            <div class="card-header">Reseñas</div>
+            <div class="card-header"><b>Reseñas</b></div>
             <div class="card-body result" id="reseniasList"></div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">Crear Préstamo</div>
+            <div class="card-header"><b>Crear Préstamo</b></div>
             <div class="card-body">
               <form id="formPrestamo">
                 <label for="usuarioPrestamo" class="form-label visually-hidden"
@@ -210,7 +216,7 @@
         </div>
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">Agregar Reseña</div>
+            <div class="card-header"><b>Agregar Reseña</b></div>
             <div class="card-body">
               <form id="formResenia">
                 <input

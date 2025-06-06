@@ -5,29 +5,32 @@ from creartablas import UsuarioDB, MaterialDB, PrestamoDB
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
-from biblioteca.resenias import ReseniaMaterial, insertar_resenia_material
+from biblioteca.resenias import ReseniaMaterial, insertar_resenia_material, listar_resenias
 
 # Definición del modelo Pydantic para ReseniaMaterial
 
 class ReseniaMaterial(BaseModel):
     id_material: str
     id_usuario: str
-    texto: str
-    calificacion: int
+    resenia: str
+    puntuacion: int
+    fecha: str  # Ahora acepta el campo fecha como string
 
     @classmethod
     def as_form(
         cls,
         id_material: str = Form(...),
         id_usuario: str = Form(...),
-        texto: str = Form(...),
-        calificacion: int = Form(...),
+        resenia: str = Form(...),
+        puntuacion: int = Form(...),
+        fecha: str = Form(...),
     ):
         return cls(
             id_material=id_material,
             id_usuario=id_usuario,
-            texto=texto,
-            calificacion=calificacion,
+            resenia=resenia,
+            puntuacion=puntuacion,
+            fecha=fecha,
         )
 
 
@@ -56,7 +59,10 @@ class UsuarioIn(BaseModel):
     telefono: str
 
     @classmethod
-    def as_form(cls, nombre: str = Form(...), apellido: str = Form(...), email: str = Form(...), telefono: str = Form(...)):
+    def as_form(cls, nombre: str, 
+                apellido: str, 
+                email: str, 
+                telefono: str):
         return cls(nombre=nombre, apellido=apellido, email=email, telefono=telefono)
 
 class MaterialIn(BaseModel):
@@ -133,7 +139,7 @@ class PrestamoIn(BaseModel):
             datetime: lambda v: v.isoformat()
         }
         @staticmethod
-        def schema_extra(schema, model):
+        def json_schema_extra(schema, model):
             schema['example'] = {
                 "id_usuario": "ABC123",
                 "id_material": "XYZ789",
@@ -147,7 +153,8 @@ class PrestamoIn(BaseModel):
         PrestamoIn.validate_dates(self.dict())
 
 @app.post("/usuarios/")
-def post_user(usuario: UsuarioIn = Depends(UsuarioIn.as_form)):
+def post_user(usuario: UsuarioIn):
+    print(usuario)
     gestor = GestorBiblioteca()
     id_usuario = gestor.agregar_usuario(usuario.nombre, usuario.apellido, usuario.email, usuario.telefono)
     return {"id_usuario": id_usuario, "nombre": usuario.nombre, "apellido": usuario.apellido, "email": usuario.email, "telefono": usuario.telefono}
@@ -162,7 +169,7 @@ def get_users():
     ]
 
 @app.post("/materiales/")
-def post_material(material: MaterialIn = Depends(MaterialIn.as_form)):
+def post_material(material: MaterialIn):
     gestor = GestorBiblioteca()
     codigo = gestor.agregar_material(
         tipo=material.tipo,
@@ -201,7 +208,7 @@ def get_materials():
     ]   
 
 @app.post("/prestamos/")
-def post_prestamo(prestamo: PrestamoIn = Depends(PrestamoIn.as_form)):
+def post_prestamo(prestamo: PrestamoIn):
     # Validación de fechas usando el método del modelo
     try:
         PrestamoIn.validate_dates(prestamo.dict())
@@ -253,17 +260,17 @@ def delete_material(codigo_inventario: str):
 
 
 @app.post("/resenias/", status_code=201)
-def crear_resenia(resenia: ReseniaMaterial = Depends(ReseniaMaterial.as_form)):
+def crear_resenia(resenia: ReseniaMaterial):
     try:
-        
+        insertar_resenia_material(resenia)
         return {"message": "Reseña insertada correctamente"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error al insertar reseña: {str(e)}")
-    
+
 @app.get("/resenias/")
-def listar_resenias():
+def listar_resenias_endpoint():
     try:
-        resenias = insertar_resenia_material.listar_resenias()
+        resenias = listar_resenias()
         return resenias
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al listar reseñas: {str(e)}")

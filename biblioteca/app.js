@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8010";
+const API = "http://127.0.0.1:8020";
 
 function mostrarUsuarios() {
   fetch(`${API}/usuarios/`)
@@ -99,19 +99,41 @@ function mostrarPrestamos() {
 
 document.getElementById("formUsuario").onsubmit = function (e) {
   e.preventDefault();
-  fetch(`${API}/usuarios/`, {
+  const nombre = document.getElementById("nombreUsuario").value.trim();
+  const apellido = document.getElementById("apellidoUsuario").value.trim();
+  const email = document.getElementById("emailUsuario").value.trim();
+  const telefono = document.getElementById("telefonoUsuario").value.trim();
+  if (!nombre || !apellido || !email || !telefono) {
+    alert(
+      "Todos los campos de usuario son obligatorios y no pueden estar vacíos."
+    );
+    return;
+  }
+  const peticion = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      nombre: document.getElementById("nombreUsuario").value,
-      apellido: document.getElementById("apellidoUsuario").value,
-      email: document.getElementById("emailUsuario").value,
-      telefono: document.getElementById("telefonoUsuario").value,
+      nombre,
+      apellido,
+      email,
+      telefono,
     }),
-  }).then(() => {
-    mostrarUsuarios();
-    document.getElementById("formUsuario").reset();
-  });
+  };
+  console.log(peticion);
+  fetch(`${API}/usuarios/`, peticion)
+    .then((r) => {
+      console.log(r);
+      if (!r.ok)
+        return r.json().then((d) => {
+          throw d;
+        });
+      return r.json();
+    })
+    .then(() => {
+      mostrarUsuarios();
+      document.getElementById("formUsuario").reset();
+    })
+    .catch((err) => console.log(err.detail || "Error al crear usuario"));
 };
 // Agregar material
 
@@ -168,7 +190,11 @@ function mostrarResenias() {
       let html = data
         .map(
           (r) =>
-            `<b>Material:</b> ${r.id_material} <b>Usuario:</b> ${r.id_usuario}<br><b>Reseña:</b> ${r.resenia || r.texto}<br><b>Puntuación:</b> ${r.puntuacion || r.calificacion}<br><b>Fecha:</b> ${r.fecha || ''}<hr>`
+            `<b>Material:</b> ${r.id_material} <b>Usuario:</b> ${
+              r.id_usuario
+            }<br><b>Reseña:</b> ${r.resenia || r.texto}<br><b>Puntuación:</b> ${
+              r.puntuacion || r.calificacion
+            }<br><b>Fecha:</b> ${r.fecha || ""}<hr>`
         )
         .join("");
       document.getElementById("reseniasList").innerHTML = html || "Sin reseñas";
@@ -189,7 +215,10 @@ function crearResenia(e) {
     }),
   })
     .then((r) => {
-      if (!r.ok) return r.json().then((d) => { throw d; });
+      if (!r.ok)
+        return r.json().then((d) => {
+          throw d;
+        });
       return r.json();
     })
     .then(() => {
