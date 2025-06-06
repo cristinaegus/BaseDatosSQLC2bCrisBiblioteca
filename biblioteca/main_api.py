@@ -22,10 +22,10 @@ app.add_middleware(
 biblioteca = GestorBiblioteca()
 
 @app.post("/usuarios/")
-def post_user(nombre: str = Form(...), apellido: str = Form(...)):
+def post_user(nombre: str = Form(...), apellido: str = Form(...), email: str = Form(None), telefono: str = Form(None)):
     gestor = GestorBiblioteca()
-    id_usuario = gestor.agregar_usuario(nombre, apellido)
-    return {"id_usuario": id_usuario, "nombre": nombre, "apellido": apellido}
+    id_usuario = gestor.agregar_usuario(nombre, apellido, email, telefono)
+    return {"id_usuario": id_usuario, "nombre": nombre, "apellido": apellido, "email": email, "telefono": telefono}
 
 @app.get("/usuarios/")
 def get_users():

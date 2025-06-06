@@ -13,8 +13,8 @@ class GestorBiblioteca:
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-    def agregar_usuario(self, nombre, apellido):
-        usuario = UsuarioDB(nombre=nombre, apellido=apellido)
+    def agregar_usuario(self, nombre, apellido, email=None, telefono=None):
+        usuario = UsuarioDB(nombre=nombre, apellido=apellido, email=email, telefono=telefono)
         self.session.add(usuario)
         self.session.commit()
         return usuario.id_usuario

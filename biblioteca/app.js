@@ -7,9 +7,12 @@ function mostrarUsuarios() {
       let html = data
         .map(
           (u) =>
-            `${u.id_usuario}: ${u.nombre} ${u.apellido} <button class='btn btn-danger btn-sm ms-2' onclick="borrarUsuario('${u.id_usuario}')">Borrar</button>`
+            `${u.id_usuario}: ${u.nombre} ${u.apellido}` +
+            (u.email ? ` | <b>Email:</b> ${u.email}` : "") +
+            (u.telefono ? ` | <b>Tel:</b> ${u.telefono}` : "") +
+            ` <button class='btn btn-danger btn-sm ms-2' onclick="borrarUsuario('${u.id_usuario}')">Borrar</button>`
         )
-        .join("\n");
+        .join("<br>");
       document.getElementById("usuariosList").innerHTML = html;
       // Para el select de préstamos
       let select = document.getElementById("usuarioPrestamo");
@@ -102,6 +105,8 @@ document.getElementById("formUsuario").onsubmit = function (e) {
     body: JSON.stringify({
       nombre: document.getElementById("nombreUsuario").value,
       apellido: document.getElementById("apellidoUsuario").value,
+      email: document.getElementById("emailUsuario").value,
+      telefono: document.getElementById("telefonoUsuario").value,
     }),
   }).then(() => {
     mostrarUsuarios();

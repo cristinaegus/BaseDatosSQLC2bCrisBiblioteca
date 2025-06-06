@@ -52,10 +52,12 @@ biblioteca = GestorBiblioteca()
 class UsuarioIn(BaseModel):
     nombre: str
     apellido: str
+    email: str
+    telefono: str
 
     @classmethod
-    def as_form(cls, nombre: str = Form(...), apellido: str = Form(...)):
-        return cls(nombre=nombre, apellido=apellido)
+    def as_form(cls, nombre: str = Form(...), apellido: str = Form(...), email: str = Form(...), telefono: str = Form(...)):
+        return cls(nombre=nombre, apellido=apellido, email=email, telefono=telefono)
 
 class MaterialIn(BaseModel):
     tipo: str
@@ -147,15 +149,15 @@ class PrestamoIn(BaseModel):
 @app.post("/usuarios/")
 def post_user(usuario: UsuarioIn = Depends(UsuarioIn.as_form)):
     gestor = GestorBiblioteca()
-    id_usuario = gestor.agregar_usuario(usuario.nombre, usuario.apellido)
-    return {"id_usuario": id_usuario, "nombre": usuario.nombre, "apellido": usuario.apellido}
+    id_usuario = gestor.agregar_usuario(usuario.nombre, usuario.apellido, usuario.email, usuario.telefono)
+    return {"id_usuario": id_usuario, "nombre": usuario.nombre, "apellido": usuario.apellido, "email": usuario.email, "telefono": usuario.telefono}
 
 @app.get("/usuarios/")
 def get_users():
     gestor = GestorBiblioteca()
     usuarios = gestor.listar_usuarios()
     return [
-        {"id_usuario": u.id_usuario, "nombre": u.nombre, "apellido": u.apellido}
+        {"id_usuario": u.id_usuario, "nombre": u.nombre, "apellido": u.apellido, "email": u.email, "telefono": u.telefono}
         for u in usuarios
     ]
 

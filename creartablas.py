@@ -10,6 +10,8 @@ class UsuarioDB(Base):
     id_usuario = Column(String, primary_key=True, default=lambda: uuid.uuid4().hex[:6].upper())
     nombre = Column(String)
     apellido = Column(String)
+    email = Column(String, nullable=True)  # Nuevo campo
+    telefono = Column(String, nullable=True)  # Nuevo campo
     
     prestamos = relationship("PrestamoDB", back_populates="usuario")
 
@@ -47,4 +49,4 @@ if __name__ == "__main__":
     engine = create_engine('postgresql://newlibrary_owner:npg_KrPkYAv7ShR8@ep-empty-lab-a9qveeyx-pooler.gwc.azure.neon.tech/newlibrary?sslmode=require')
     Base.metadata.drop_all(engine) # Eliminar las tablas si ya existen
     Base.metadata.create_all(engine)
-    print("Tablas creadas")    
+    print("Tablas creadas")
