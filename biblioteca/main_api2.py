@@ -257,3 +257,11 @@ def crear_resenia(resenia: ReseniaMaterial = Depends(ReseniaMaterial.as_form)):
         return {"message": "Reseña insertada correctamente"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error al insertar reseña: {str(e)}")
+    
+@app.get("/resenias/")
+def listar_resenias():
+    try:
+        resenias = insertar_resenia_material.listar_resenias()
+        return resenias
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al listar reseñas: {str(e)}")
